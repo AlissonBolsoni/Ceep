@@ -1,31 +1,47 @@
 package br.com.alisson.ceep.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 
 import br.com.alisson.ceep.R;
-import br.com.alisson.ceep.dao.NotaDAO;
 import br.com.alisson.ceep.model.Nota;
 
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.NOTA;
-import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.RESULT_CODE;
+import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO;
+import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO_INVALIDA;
+import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.RESULT_CODE_CRIAR;
 
 public class FormularioNotaActivity extends AppCompatActivity {
 
-    public static final String TITLE_APP = "Insere notas";
+    public static final String TITLE_APP_CRIAR = "Insere notas";
+    public static final String TITLE_APP_EDITAR = "Edita notas";
+
+    private int posicao = POSICAO_INVALIDA;
+    private EditText titulo;
+    private EditText descricao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_nota);
 
-        setTitle(TITLE_APP);
+
+        inicializaCampos();
+
+        setTitle(TITLE_APP_CRIAR);
+        Intent intent = getIntent();
+        if (intent.hasExtra(NOTA)){
+            setTitle(TITLE_APP_EDITAR);
+            Nota nota = (Nota) intent.getSerializableExtra(NOTA);
+            posicao = intent.getIntExtra(POSICAO, POSICAO_INVALIDA);
+            preecheNota(nota);
+        }
+
     }
 
     @Override
@@ -49,14 +65,23 @@ public class FormularioNotaActivity extends AppCompatActivity {
     private void retornaNota(Nota nota) {
         Intent intent = new Intent();
         intent.putExtra(NOTA, nota);
-        setResult(RESULT_CODE, intent);
+        intent.putExtra(POSICAO, posicao);
+        setResult(RESULT_CODE_CRIAR, intent);
     }
 
     @NonNull
     private Nota criaNota() {
-        EditText titulo = findViewById(R.id.formulario_nota_titulo);
-        EditText descricao = findViewById(R.id.formulario_nota_descricao);
         return new Nota(titulo.getText().toString(), descricao.getText().toString());
+    }
+
+    private void preecheNota(Nota nota) {
+        titulo.setText(nota.getTitulo());
+        descricao.setText(nota.getDescricao());
+    }
+
+    private void inicializaCampos() {
+        titulo = findViewById(R.id.formulario_nota_titulo);
+        descricao = findViewById(R.id.formulario_nota_descricao);
     }
 
     private boolean isMenuSalvaNota(MenuItem item) {

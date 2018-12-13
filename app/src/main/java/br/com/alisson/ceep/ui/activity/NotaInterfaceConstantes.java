@@ -3,8 +3,13 @@ package br.com.alisson.ceep.ui.activity;
 public interface NotaInterfaceConstantes {
 
 
-    int REQUEST_CODE_FORMULARIO = 1;
-    String NOTA = "nota";
-    int RESULT_CODE = 2;
+    int REQUEST_CODE_FORMULARIO_CRIAR = 1;
+    int REQUEST_CODE_FORMULARIO_EDITAR = 2;
 
+    String NOTA = "nota";
+    String POSICAO = "posicao";
+
+    int RESULT_CODE_CRIAR = 2;
+
+    int POSICAO_INVALIDA = -1;
 }

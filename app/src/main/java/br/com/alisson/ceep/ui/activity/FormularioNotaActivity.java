@@ -1,5 +1,6 @@
 package br.com.alisson.ceep.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +15,6 @@ import br.com.alisson.ceep.model.Nota;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.NOTA;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO_INVALIDA;
-import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.RESULT_CODE_CRIAR;
 
 public class FormularioNotaActivity extends AppCompatActivity {
 
@@ -30,18 +30,16 @@ public class FormularioNotaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_nota);
 
-
         inicializaCampos();
 
         setTitle(TITLE_APP_CRIAR);
         Intent intent = getIntent();
-        if (intent.hasExtra(NOTA)){
+        if (intent.hasExtra(NOTA)) {
             setTitle(TITLE_APP_EDITAR);
             Nota nota = (Nota) intent.getSerializableExtra(NOTA);
             posicao = intent.getIntExtra(POSICAO, POSICAO_INVALIDA);
             preecheNota(nota);
         }
-
     }
 
     @Override
@@ -53,7 +51,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(isMenuSalvaNota(item)){
+        if (isMenuSalvaNota(item)) {
             Nota nota = criaNota();
             retornaNota(nota);
             finish();
@@ -66,7 +64,8 @@ public class FormularioNotaActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(NOTA, nota);
         intent.putExtra(POSICAO, posicao);
-        setResult(RESULT_CODE_CRIAR, intent);
+        setResult(Activity.RESULT_OK, intent);
+
     }
 
     @NonNull

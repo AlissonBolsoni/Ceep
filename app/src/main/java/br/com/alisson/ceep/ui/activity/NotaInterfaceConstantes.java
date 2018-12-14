@@ -9,7 +9,5 @@ public interface NotaInterfaceConstantes {
     String NOTA = "nota";
     String POSICAO = "posicao";
 
-    int RESULT_CODE_CRIAR = 2;
-
     int POSICAO_INVALIDA = -1;
 }

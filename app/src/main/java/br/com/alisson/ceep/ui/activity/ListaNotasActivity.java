@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +20,7 @@ import java.util.List;
 import br.com.alisson.ceep.R;
 import br.com.alisson.ceep.dao.NotaDAO;
 import br.com.alisson.ceep.model.Nota;
+import br.com.alisson.ceep.preferences.ListaNotasPreferences;
 import br.com.alisson.ceep.ui.recycler.adapter.ListaNotasAdapter;
 import br.com.alisson.ceep.ui.recycler.adapter.listener.OnItemClickListener;
 import br.com.alisson.ceep.ui.recycler.helper.callback.NotaItemTouchCallback;
@@ -30,6 +35,8 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     public static final String TITLE_APP = "Notas";
     private ListaNotasAdapter adapter;
+    private RecyclerView listaNotasRecyclerView;
+    private ListaNotasPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +45,19 @@ public class ListaNotasActivity extends AppCompatActivity {
 
         setTitle(TITLE_APP);
 
+        listaNotasRecyclerView = findViewById(R.id.lista_notas_recycler_view);
+
         List<Nota> notas = pegaTodasNotas();
         configuraRecyclerView(notas);
 
         configuraBotaoInsereNota();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        preferences = new ListaNotasPreferences(this);
     }
 
     private void configuraBotaoInsereNota() {
@@ -160,5 +176,48 @@ public class ListaNotasActivity extends AppCompatActivity {
     private void configuraItemTouchHelper(RecyclerView listaNotas) {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchCallback(adapter));
         itemTouchHelper.attachToRecyclerView(listaNotas);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_lista_notas, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menu_lista_troca_layout);
+        selecionaLayout(item);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(isMenuTrocaLayout(item)){
+            selecionaLayout(item);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void selecionaLayout(MenuItem item) {
+        String tipo = preferences.getTipoLayout();
+
+        if (TipoListaLayout.ehLinear(tipo)){
+            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+            listaNotasRecyclerView.setLayoutManager(layoutManager);
+            preferences.setTipoLayout(TipoListaLayout.GRID_LAYOUT.name());
+            item.setIcon(R.drawable.ic_action_linear_layout);
+        }else if (TipoListaLayout.ehGrid(tipo)){
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            listaNotasRecyclerView.setLayoutManager(layoutManager);
+            preferences.setTipoLayout(TipoListaLayout.LINEAR_LAYOUT.name());
+            item.setIcon(R.drawable.ic_action_grid_layout);
+        }
+    }
+
+    private boolean isMenuTrocaLayout(MenuItem item){
+        return item.getItemId() == R.id.menu_lista_troca_layout;
     }
 }

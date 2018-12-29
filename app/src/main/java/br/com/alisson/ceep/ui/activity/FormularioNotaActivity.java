@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,11 @@ public class FormularioNotaActivity extends AppCompatActivity {
     public static final String TITLE_APP_CRIAR = "Insere notas";
     public static final String TITLE_APP_EDITAR = "Edita notas";
 
+    static final String NOTA_TITULO = "NOTA_TITULO";
+    static final String NOTA_DESCRICAO = "NOTA_DESCRICAO";
+    static final String NOTA_COR_ID = "NOTA_COR_ID";
+    static final String NOTA_COR_HEXA = "NOTA_COR_HEXA";
+
     private int posicao = POSICAO_INVALIDA;
     private EditText titulo;
     private EditText descricao;
@@ -45,6 +51,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
         inicializaCampos();
 
         setTitle(TITLE_APP_CRIAR);
+
         Intent intent = getIntent();
         if (intent.hasExtra(NOTA)) {
             setTitle(TITLE_APP_EDITAR);
@@ -53,7 +60,29 @@ public class FormularioNotaActivity extends AppCompatActivity {
             preecheNota(nota);
         }
 
+
         configuraRecyclerView(new CorDao().listaCores());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        titulo.setText(savedInstanceState.getString(NOTA_TITULO));
+        descricao.setText(savedInstanceState.getString(NOTA_DESCRICAO));
+        int idCor = savedInstanceState.getInt(NOTA_COR_ID);
+        String hexa = savedInstanceState.getString(NOTA_COR_HEXA);
+        cor = new Cor(idCor, hexa);
+
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putCharSequence(NOTA_TITULO, titulo.getText().toString());
+        outState.putString(NOTA_DESCRICAO, descricao.getText().toString());
+        outState.putInt(NOTA_COR_ID, cor.getIdCor());
+        outState.putString(NOTA_COR_HEXA, cor.getCorHexa());
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

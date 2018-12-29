@@ -22,14 +22,26 @@
         android:id="@+id/formulario_nota_descricao"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
-        android:hint="Descrição"
         android:gravity="top"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:hint="Descrição"
+        app:layout_constraintBottom_toTopOf="@+id/formulario_nota_seletores"
         app:layout_constraintEnd_toEndOf="@id/formulario_nota_titulo"
         app:layout_constraintStart_toStartOf="@id/formulario_nota_titulo"
         app:layout_constraintTop_toBottomOf="@id/formulario_nota_titulo" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/formulario_nota_seletores"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        android:orientation="horizontal"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/item_seletor_cor" />
 
 </android.support.constraint.ConstraintLayout>

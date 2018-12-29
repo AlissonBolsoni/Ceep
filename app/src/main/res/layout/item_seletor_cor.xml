@@ -6,6 +6,7 @@
     android:layout_width="30dp"
     android:layout_height="30dp"
     android:layout_margin="10dp"
+    android:background="@color/colorPrimary"
     tools:background="@sample/seletores.json/cores/fundo">
 
 </FrameLayout>

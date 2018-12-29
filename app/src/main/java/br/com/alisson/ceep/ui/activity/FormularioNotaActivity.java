@@ -2,15 +2,24 @@ package br.com.alisson.ceep.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.util.List;
+
 import br.com.alisson.ceep.R;
+import br.com.alisson.ceep.dao.CorDao;
+import br.com.alisson.ceep.model.Cor;
 import br.com.alisson.ceep.model.Nota;
+import br.com.alisson.ceep.ui.recycler.adapter.SeletoresCoresAdapter;
+import br.com.alisson.ceep.ui.recycler.adapter.listener.OnItemClickListener;
 
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.NOTA;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO;
@@ -24,6 +33,9 @@ public class FormularioNotaActivity extends AppCompatActivity {
     private int posicao = POSICAO_INVALIDA;
     private EditText titulo;
     private EditText descricao;
+    private SeletoresCoresAdapter adapter;
+    private Cor cor = new CorDao().CorPadrao();
+    private ConstraintLayout formularioCorpo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,8 @@ public class FormularioNotaActivity extends AppCompatActivity {
             posicao = intent.getIntExtra(POSICAO, POSICAO_INVALIDA);
             preecheNota(nota);
         }
+
+        configuraRecyclerView(new CorDao().listaCores());
     }
 
     @Override
@@ -70,7 +84,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
 
     @NonNull
     private Nota criaNota() {
-        return new Nota(titulo.getText().toString(), descricao.getText().toString());
+        return new Nota(titulo.getText().toString(), descricao.getText().toString(), cor);
     }
 
     private void preecheNota(Nota nota) {
@@ -81,9 +95,28 @@ public class FormularioNotaActivity extends AppCompatActivity {
     private void inicializaCampos() {
         titulo = findViewById(R.id.formulario_nota_titulo);
         descricao = findViewById(R.id.formulario_nota_descricao);
+        formularioCorpo = findViewById(R.id.formulario_corpo);
     }
 
     private boolean isMenuSalvaNota(MenuItem item) {
         return item.getItemId() == R.id.menu_formulario_ic_salva;
+    }
+
+    private void configuraRecyclerView(List<Cor> cores) {
+        RecyclerView listaCores = findViewById(R.id.formulario_nota_seletores);
+        configuraAdapter(cores, listaCores);
+    }
+
+    private void configuraAdapter(List<Cor> cores, RecyclerView listaCores) {
+        adapter = new SeletoresCoresAdapter(cores, this);
+        listaCores.setAdapter(adapter);
+        adapter.setOnCorClickListener(new SeletoresCoresAdapter.CorClickListener() {
+
+            @Override
+            public void onItemClick(Cor cor) {
+                FormularioNotaActivity.this.cor = cor;
+                FormularioNotaActivity.this.formularioCorpo.setBackgroundColor(Color.parseColor(cor.getCorHexa()));
+            }
+        });
     }
 }

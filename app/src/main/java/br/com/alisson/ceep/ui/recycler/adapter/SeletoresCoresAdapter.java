@@ -12,16 +12,17 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.alisson.ceep.R;
+import br.com.alisson.ceep.model.Cor;
 import br.com.alisson.ceep.model.Nota;
 import br.com.alisson.ceep.ui.recycler.adapter.listener.OnItemClickListener;
 
 public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAdapter.SeletorViewHolder> {
 
     private CorClickListener corClickListener;
-    private List<String> cores;
+    private List<Cor> cores;
     private Context context;
 
-    public SeletoresCoresAdapter(List<String> cores, Context context) {
+    public SeletoresCoresAdapter(List<Cor> cores, Context context) {
         this.cores = cores;
         this.context = context;
     }
@@ -36,13 +37,13 @@ public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAd
 
     @Override
     public void onBindViewHolder(@NonNull SeletorViewHolder seletorViewHolder, int i) {
-        String cor = cores.get(i);
+        Cor cor = cores.get(i);
         seletorViewHolder.vincula(cor);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return this.cores.size();
     }
 
     public void setOnCorClickListener(CorClickListener corClickListener) {
@@ -52,7 +53,7 @@ public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAd
     class SeletorViewHolder extends RecyclerView.ViewHolder{
 
         private final FrameLayout corView;
-        private String cor;
+        private Cor cor;
 
         public SeletorViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,22 +62,22 @@ public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAd
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    corClickListener.onItemClick();
+                    corClickListener.onItemClick(cor);
                 }
             });
         }
 
-        public void vincula(String cor){
+        public void vincula(Cor cor){
             this.cor = cor;
             preencheCampo(cor);
         }
 
-        private void preencheCampo(String cor) {
-            corView.setBackground(context.getResources().getDrawable(R.drawable.amarelo));
+        private void preencheCampo(Cor cor) {
+            corView.setBackground(context.getResources().getDrawable(cor.getIdCor()));
         }
     }
 
-    interface CorClickListener{
-        public void onItemClick();
+    public interface CorClickListener{
+        public void onItemClick(Cor cor);
     }
 }

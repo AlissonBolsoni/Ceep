@@ -84,7 +84,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private List<Nota> pegaTodasNotas() {
-        NotaDAO dao = new NotaDAO();
+        NotaDAO dao = new NotaDAO(this);
         return dao.todos();
     }
 
@@ -118,12 +118,12 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private void alteraNota(int posicao, Nota nota) {
-        new NotaDAO().altera(posicao, nota);
+        new NotaDAO(this).altera(nota);
         adapter.altera(posicao, nota);
     }
 
     private void adicionaNota(Nota nota) {
-        new NotaDAO().insere(nota);
+        new NotaDAO(this).insere(nota);
         adapter.adiciona(nota);
     }
 
@@ -174,7 +174,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private void configuraItemTouchHelper(RecyclerView listaNotas) {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchCallback(adapter));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchCallback(adapter, this));
         itemTouchHelper.attachToRecyclerView(listaNotas);
     }
 
@@ -187,7 +187,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.menu_lista_troca_layout);
-        selecionaLayout(item);
+        selecionaLayout(item, false);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -195,24 +195,27 @@ public class ListaNotasActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(isMenuTrocaLayout(item)){
-            selecionaLayout(item);
+            selecionaLayout(item, true);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void selecionaLayout(MenuItem item) {
+    private void selecionaLayout(MenuItem item, Boolean click) {
         String tipo = preferences.getTipoLayout();
 
-        if (TipoListaLayout.ehLinear(tipo)){
+        if (click){
+            tipo = TipoListaLayout.trocaLayout(tipo, this);
+        }
+
+
+        if (TipoListaLayout.ehGrid(tipo)){
             StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
             listaNotasRecyclerView.setLayoutManager(layoutManager);
-            preferences.setTipoLayout(TipoListaLayout.GRID_LAYOUT.name());
             item.setIcon(R.drawable.ic_action_linear_layout);
-        }else if (TipoListaLayout.ehGrid(tipo)){
+        }else if (TipoListaLayout.ehLinear(tipo)){
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             listaNotasRecyclerView.setLayoutManager(layoutManager);
-            preferences.setTipoLayout(TipoListaLayout.LINEAR_LAYOUT.name());
             item.setIcon(R.drawable.ic_action_grid_layout);
         }
     }

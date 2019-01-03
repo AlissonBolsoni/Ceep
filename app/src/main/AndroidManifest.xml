@@ -17,7 +17,8 @@
         <activity
             android:name=".ui.activity.FormularioNotaActivity"
             android:screenOrientation="fullSensor" />
-        <activity android:name=".ui.activity.SplashActivity"
+        <activity
+            android:name=".ui.activity.SplashActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.FormularioFeedbackActivity"></activity>
     </application>
 
 </manifest>

@@ -196,9 +196,18 @@ public class ListaNotasActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(isMenuTrocaLayout(item)){
             selecionaLayout(item, true);
+        }else if (ehMenuVaiParaFeedback(item)){
+            Intent intent = new Intent(this, FormularioFeedbackActivity.class);
+            startActivity(intent);
         }
 
+
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean ehMenuVaiParaFeedback(MenuItem item) {
+        return item.getItemId() == R.id.menu_lista_vai_para_feedback;
     }
 
     private void selecionaLayout(MenuItem item, Boolean click) {

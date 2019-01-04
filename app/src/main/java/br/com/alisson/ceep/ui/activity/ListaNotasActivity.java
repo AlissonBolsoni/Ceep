@@ -27,13 +27,13 @@ import br.com.alisson.ceep.ui.recycler.helper.callback.NotaItemTouchCallback;
 
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.NOTA;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO;
+import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO_INVALIDA;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.REQUEST_CODE_FORMULARIO_CRIAR;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.REQUEST_CODE_FORMULARIO_EDITAR;
-import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO_INVALIDA;
 
 public class ListaNotasActivity extends AppCompatActivity {
 
-    public static final String TITLE_APP = "Notas";
+    private static final String TITLE_APP = "Notas";
     private ListaNotasAdapter adapter;
     private RecyclerView listaNotasRecyclerView;
     private ListaNotasPreferences preferences;

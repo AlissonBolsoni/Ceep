@@ -7,14 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import java.util.List;
 
 import br.com.alisson.ceep.R;
 import br.com.alisson.ceep.model.Cor;
-import br.com.alisson.ceep.model.Nota;
-import br.com.alisson.ceep.ui.recycler.adapter.listener.OnItemClickListener;
 
 public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAdapter.SeletorViewHolder> {
 
@@ -50,12 +47,12 @@ public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAd
         this.corClickListener = corClickListener;
     }
 
-    class SeletorViewHolder extends RecyclerView.ViewHolder{
+    class SeletorViewHolder extends RecyclerView.ViewHolder {
 
         private final FrameLayout corView;
         private Cor cor;
 
-        public SeletorViewHolder(@NonNull View itemView) {
+        SeletorViewHolder(@NonNull View itemView) {
             super(itemView);
             corView = itemView.findViewById(R.id.item_seletor_cor);
 
@@ -67,7 +64,7 @@ public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAd
             });
         }
 
-        public void vincula(Cor cor){
+        void vincula(Cor cor) {
             this.cor = cor;
             preencheCampo(cor);
         }
@@ -77,7 +74,7 @@ public class SeletoresCoresAdapter extends RecyclerView.Adapter<SeletoresCoresAd
         }
     }
 
-    public interface CorClickListener{
+    public interface CorClickListener {
         public void onItemClick(Cor cor);
     }
 }

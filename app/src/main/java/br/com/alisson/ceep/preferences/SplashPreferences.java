@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import br.com.alisson.ceep.ui.activity.TipoListaLayout;
-
 public class SplashPreferences {
 
     private final static String SPLASH_PREFERENCES = "br.com.alisson.ceep.preferences.SplashPreferences";

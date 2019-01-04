@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import br.com.alisson.ceep.model.Cor;
 import br.com.alisson.ceep.model.Nota;
@@ -17,15 +16,15 @@ public class NotaDAO extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "ceep";
     private static final int VERSION = 1;
-    public static final String TABELA_NOTAS = "Notas";
+    private static final String TABELA_NOTAS = "Notas";
     public static final String ID = "id";
-    public static final String TITULO = "titulo";
-    public static final String DESCRICAO = "descricao";
-    public static final String COR_ID = "corId";
-    public static final String COR_HEXA = "corHexa";
-    public static final String POSICAO = "posicao";
-    public static final String DESATIVADO = "desativado";
-    public static final int POSICAO_SEM_NADA_NO_BD = -1;
+    private static final String TITULO = "titulo";
+    private static final String DESCRICAO = "descricao";
+    private static final String COR_ID = "corId";
+    private static final String COR_HEXA = "corHexa";
+    private static final String POSICAO = "posicao";
+    private static final String DESATIVADO = "desativado";
+    private static final int POSICAO_SEM_NADA_NO_BD = -1;
     private Context context;
 
     public NotaDAO(Context context) {
@@ -145,24 +144,6 @@ public class NotaDAO extends SQLiteOpenHelper {
         db.update(TABELA_NOTAS, cv, sql, null);
     }
 
-    private Nota pegaNotaPorPosicao(int posicao) {
-        SQLiteDatabase db = getReadableDatabase();
-
-        String sql = "SELECT * FROM " + TABELA_NOTAS +
-                " WHERE " + DESATIVADO + " = " + Nota.ATIVO +
-                " AND " + POSICAO + " = " + posicao +
-                " LIMIT 1";
-
-        Cursor cursor = db.rawQuery(sql, null);
-        ArrayList<Nota> notas = populaNotas(cursor);
-
-        if (notas.size() == 0) {
-            return null;
-        }
-
-        return notas.get(0);
-    }
-
     public void remove(Nota nota) {
         nota.desativa();
         altera(nota);
@@ -176,13 +157,5 @@ public class NotaDAO extends SQLiteOpenHelper {
         notaFim.setPosicao(notaInicio.getPosicao());
         altera(notaFim);
 
-    }
-
-    public void removeTodos() {
-        SQLiteDatabase db = getWritableDatabase();
-
-        String update = "UPDATE " + TABELA_NOTAS + " SET " + DESATIVADO + " = " + Nota.DESATIVADO;
-
-        db.execSQL(update);
     }
 }

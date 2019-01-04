@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,6 @@ import br.com.alisson.ceep.dao.CorDao;
 import br.com.alisson.ceep.model.Cor;
 import br.com.alisson.ceep.model.Nota;
 import br.com.alisson.ceep.ui.recycler.adapter.SeletoresCoresAdapter;
-import br.com.alisson.ceep.ui.recycler.adapter.listener.OnItemClickListener;
 
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.NOTA;
 import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO;
@@ -28,10 +26,9 @@ import static br.com.alisson.ceep.ui.activity.NotaInterfaceConstantes.POSICAO_IN
 
 public class FormularioNotaActivity extends AppCompatActivity {
 
-    public static final String TITLE_APP_CRIAR = "Insere notas";
-    public static final String TITLE_APP_EDITAR = "Edita notas";
-
-    static final String NOTA_SAVE = "NOTA_SAVE";
+    private static final String NOTA_SAVE = "NOTA_SAVE";
+    private static final String TITLE_APP_CRIAR = "Insere notas";
+    private static final String TITLE_APP_EDITAR = "Edita notas";
 
     private int posicao = POSICAO_INVALIDA;
     private EditText titulo;
@@ -49,7 +46,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
         setTitle(TITLE_APP_CRIAR);
 
         Intent intent = getIntent();
-        if (intent.hasExtra(NOTA)) {
+        if (temNota(intent)) {
             setTitle(TITLE_APP_EDITAR);
             nota = (Nota) intent.getSerializableExtra(NOTA);
             posicao = intent.getIntExtra(POSICAO, POSICAO_INVALIDA);
@@ -59,6 +56,10 @@ public class FormularioNotaActivity extends AppCompatActivity {
         }
 
         configuraRecyclerView(new CorDao().listaCores());
+    }
+
+    private boolean temNota(Intent intent) {
+        return intent != null && intent.hasExtra(NOTA);
     }
 
     @Override

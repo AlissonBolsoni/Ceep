@@ -1,27 +1,27 @@
 package br.com.alisson.ceep.ui.async;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 
 import java.util.concurrent.TimeUnit;
 
-import br.com.alisson.ceep.preferences.SplashPreferences;
-import br.com.alisson.ceep.ui.activity.ListaNotasActivity;
-import br.com.alisson.ceep.ui.activity.SplashActivity;
+public class SplashAsync extends AsyncTask<Boolean, Void, Void> {
 
-public class SplashAsync extends AsyncTask<Void, Void, Void> {
 
-    private SplashActivity context;
+    private SplashCallback callback;
 
-    public SplashAsync(SplashActivity context) {
-        this.context = context;
+    public SplashAsync(SplashCallback callback) {
+        this.callback = callback;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-        SplashPreferences sp = new SplashPreferences(context);
+    protected Void doInBackground(Boolean... params) {
+
+        boolean jaConectado = false;
+        if (params.length > 0)
+            jaConectado = params[0];
+
         try {
-            if (sp.getConectadoUmaVez()) {
+            if (jaConectado) {
                 Thread.sleep(500);
             } else {
                 Thread.sleep(TimeUnit.SECONDS.toMillis(2));
@@ -30,18 +30,16 @@ public class SplashAsync extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
 
-        sp.setConectadoUmaVez();
-
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-
-        Intent intent = new Intent(context, ListaNotasActivity.class);
-        context.startActivity(intent);
-        context.finish();
-
+        callback.splashCallback();
         super.onPostExecute(aVoid);
+    }
+
+    public interface SplashCallback {
+        void splashCallback();
     }
 }

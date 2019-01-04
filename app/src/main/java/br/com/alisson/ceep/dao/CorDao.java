@@ -1,7 +1,6 @@
 package br.com.alisson.ceep.dao;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import br.com.alisson.ceep.R;
 import br.com.alisson.ceep.model.Cor;

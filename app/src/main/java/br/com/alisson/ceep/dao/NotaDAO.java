@@ -55,7 +55,7 @@ public class NotaDAO extends SQLiteOpenHelper {
 
     @NonNull
     private String baseSql() {
-        return "SELECT * FROM " + TABELA_NOTAS + " WHERE " + DESATIVADO + " = " + Nota.ATIVO + " ORDER BY " + POSICAO ;
+        return "SELECT * FROM " + TABELA_NOTAS + " WHERE " + DESATIVADO + " = " + Nota.ATIVO + " ORDER BY " + POSICAO + " DESC";
     }
 
     public ArrayList<Nota> todos() {
@@ -93,7 +93,7 @@ public class NotaDAO extends SQLiteOpenHelper {
     private int ultimaPosicao() {
         SQLiteDatabase db = getReadableDatabase();
 
-        String sql = baseSql() + " DESC LIMIT 1";
+        String sql = baseSql() + " LIMIT 1";
 
         Cursor cursor = db.rawQuery(sql, null);
         ArrayList<Nota> notas = populaNotas(cursor);
@@ -105,17 +105,14 @@ public class NotaDAO extends SQLiteOpenHelper {
         return notas.get(0).getPosicao();
     }
 
-    public void insere(Nota... notas) {
+    public void insere(Nota nota) {
         int pos = ultimaPosicao();
-
         SQLiteDatabase db = getWritableDatabase();
 
-        for (Nota nota : notas) {
-            pos++;
-            ContentValues cv = populaNotaCV(pos, nota);
-
-            db.insert(TABELA_NOTAS, null, cv);
-        }
+        pos++;
+        ContentValues cv = populaNotaCV(pos, nota);
+        long id = db.insert(TABELA_NOTAS, null, cv);
+        nota.setId((int) id);
     }
 
     @NonNull
@@ -142,7 +139,7 @@ public class NotaDAO extends SQLiteOpenHelper {
     public void altera(Nota nota) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String sql = ID + " = " +nota.getId();
+        String sql = ID + " = " + nota.getId();
 
         ContentValues cv = populaNotaCV(null, nota);
         db.update(TABELA_NOTAS, cv, sql, null);
@@ -166,34 +163,25 @@ public class NotaDAO extends SQLiteOpenHelper {
         return notas.get(0);
     }
 
-    public void remove(int posicao) {
-        Nota nota = pegaNotaPorPosicao(posicao);
-
-        if (nota != null) {
-            nota.desativa();
-            altera(nota);
-        }
+    public void remove(Nota nota) {
+        nota.desativa();
+        altera(nota);
     }
 
-    public void troca(int posicaoInicio, int posicaoFim) {
+    public void troca(Nota notaInicio, Nota notaFim) {
 
-        Nota notaInicio = pegaNotaPorPosicao(posicaoInicio);
-        Nota notaFim = pegaNotaPorPosicao(posicaoFim);
+        notaInicio.setPosicao(notaFim.getPosicao());
+        altera(notaInicio);
 
-        if (notaInicio != null && notaFim != null) {
-            notaInicio.setPosicao(posicaoFim);
-            altera(notaInicio);
-
-            notaFim.setPosicao(posicaoInicio);
-            altera(notaFim);
-        }
+        notaFim.setPosicao(notaInicio.getPosicao());
+        altera(notaFim);
 
     }
 
     public void removeTodos() {
         SQLiteDatabase db = getWritableDatabase();
 
-        String update = "UPDATE "+ TABELA_NOTAS +" SET "+ DESATIVADO +" = "+ Nota.DESATIVADO;
+        String update = "UPDATE " + TABELA_NOTAS + " SET " + DESATIVADO + " = " + Nota.DESATIVADO;
 
         db.execSQL(update);
     }

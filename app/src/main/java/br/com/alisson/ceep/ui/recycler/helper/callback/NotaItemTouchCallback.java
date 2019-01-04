@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import br.com.alisson.ceep.dao.NotaDAO;
+import br.com.alisson.ceep.model.Nota;
 import br.com.alisson.ceep.ui.recycler.adapter.ListaNotasAdapter;
 
 public class NotaItemTouchCallback extends ItemTouchHelper.Callback {
@@ -33,7 +34,10 @@ public class NotaItemTouchCallback extends ItemTouchHelper.Callback {
     }
 
     private void trocaNotas(int posicaoInicial, int posicaoFinal) {
-        new NotaDAO(context).troca(posicaoInicial, posicaoFinal);
+        Nota notaInicial = adapter.pegaNota(posicaoInicial);
+        Nota notaFinal = adapter.pegaNota(posicaoFinal);
+
+        new NotaDAO(context).troca(notaInicial, notaFinal);
         adapter.troca(posicaoInicial, posicaoFinal);
     }
 
@@ -44,7 +48,8 @@ public class NotaItemTouchCallback extends ItemTouchHelper.Callback {
     }
 
     private void removeNotas(int posicao) {
-        new NotaDAO(context).remove(posicao);
+        Nota nota = adapter.pegaNota(posicao);
+        new NotaDAO(context).remove(nota);
         adapter.remove(posicao);
     }
 }

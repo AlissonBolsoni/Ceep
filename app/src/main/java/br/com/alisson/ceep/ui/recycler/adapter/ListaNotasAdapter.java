@@ -52,7 +52,7 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
     }
 
     public void adiciona(Nota nota){
-        this.notas.add(nota);
+        this.notas.add(0, nota);
         notifyDataSetChanged();
     }
 
@@ -69,6 +69,10 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
     public void troca(int posicaoInicial, int posicaoFinal) {
         Collections.swap(notas, posicaoInicial, posicaoFinal);
         notifyItemMoved(posicaoInicial, posicaoFinal);
+    }
+
+    public Nota pegaNota(int posicao) {
+        return notas.get(posicao);
     }
 
     class NotaViewHolder extends RecyclerView.ViewHolder{

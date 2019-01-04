@@ -7,10 +7,10 @@ public class Nota implements Serializable {
     public static final int ATIVO = 0;
     public static final int DESATIVADO = 1;
 
-    private final int id;
+    private int id;
     private final String titulo;
     private final String descricao;
-    private final Cor cor;
+    private Cor cor;
     private int posicao;
     private int desativado;
 
@@ -55,5 +55,13 @@ public class Nota implements Serializable {
 
     public int getDesativado() {
         return desativado;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCor(Cor cor) {
+        this.cor = cor;
     }
 }
